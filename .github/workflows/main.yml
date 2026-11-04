@@ -1,0 +1,53 @@
+name: Brute Force Test
+
+on:
+  # Run manually from the Actions tab
+  workflow_dispatch:
+    inputs:
+      start_id:
+        description: 'Start ID'
+        required: true
+        default: '20000000'
+      end_id:
+        description: 'End ID'
+        required: true
+        default: '20001000'
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    timeout-minutes: 350 # Max is 360 (6 hours). Set to 350 to allow safe artifact upload before timeout.
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install requests beautifulsoup4
+
+      - name: Run Brute Force Script
+        # We pass --yes to skip the prompt, and use the inputs from the workflow dispatch
+        run: |
+          python bruteforce_ci.py \
+            --start ${{ github.event.inputs.start_id }} \
+            --end ${{ github.event.inputs.end_id }} \
+            --threads 10 \
+            --yes
+        env:
+          CI: "true" # Tells the script it's in a CI environment
+
+      - name: Upload Results Artifact
+        if: always() # Upload even if the script hits the 6-hour timeout and fails
+        uses: actions/upload-artifact@v4
+        with:
+          name: scrape-results-${{ github.run_number }}
+          path: |
+            results.jsonl
+            progress.txt
+            scraper.log
+          retention-days: 7
