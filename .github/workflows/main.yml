@@ -36,7 +36,7 @@ jobs:
           python bruteforce_ci.py \
             --start ${{ github.event.inputs.start_id }} \
             --end ${{ github.event.inputs.end_id }} \
-            --threads 10 \
+            --threads 10
             
         env:
           CI: "true" # Tells the script it's in a CI environment
