@@ -26,10 +26,11 @@ THREADS = 6
 
 PROXY_LIST = [] 
 
+# ================= CONFIGURATION =================
+# ... (keep URL, START_ID, END_ID, THREADS, etc. the same) ...
+
 CATEGORIES = {
-    "1": "قبول عام",
-    "3": "قبول على النفقة الخاصة",
-    "5": "قبول أبناء العاملين"
+    "13": "منح التعليم الاهلي"
 }
 
 RESULTS_FILE = "results.jsonl"
